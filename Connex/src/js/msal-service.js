@@ -1,14 +1,16 @@
-function navigateToMarketPoint(){
-  const userHint = sessionStorage.getItem('login-hint');
-  const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
+const metas = document.getElementsByTagName('meta');
 
-  window.location.href = `https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}&tenant=${tenant}`
+function navigateToMarketPoint() {
+    const userHint = sessionStorage.getItem('login-hint');
+    const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
+
+    window.location.href = `https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}&tenant=${tenant}`
 
 }
 
-async function getUrlParameters(){
-  const params = (new URL(window.location.href)).searchParams;
-  return params;
+async function getUrlParameters() {
+    const params = (new URL(window.location.href)).searchParams;
+    return params;
 }
 
 
@@ -18,8 +20,6 @@ const language = window.navigator.languages[0];
 const MSAL = window.msal;
 const clientId = () => getMetatag('clientId');
 const scope = () => getMetatag('apiScope');
-const canUseMsalAuth = () => JSON.parse(getMetatag('use-msal-auth'));
-const canUseMsalSignout = () => JSON.parse(getMetatag('use-msal-signout'));
 const scopes = [scope()];
 const accessTokenRequest = {
     scopes: scopes
@@ -28,7 +28,7 @@ const accessTokenRequest = {
 const msalConfig = {
     auth: {
         clientId: clientId(),
-        redirectUri: window.location.origin + '/index.html',
+        redirectUri: `${window.location.origin}/index.html`,
         authority: 'https://login.microsoftonline.com/3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4/',
         navigateToLoginRequestUrl: false
     },
@@ -48,50 +48,36 @@ const msalInstance = new msal.PublicClientApplication(msalConfig);
 
 const signIn = async function () {
 
-    // loginSection.style.visibility = 'hidden';
-    pageLoadingSection.style.visibility = 'visible';
 
     sessionStorage.setItem('clientId', clientId());
     localStorage.clear();
 
-    if (canUseMsalAuth()) {
+    this.account = msalInstance.getAllAccounts()[0] || null;
 
-        loginSection.stylevisibility = 'visible';
-        pageLoadingSection.style.visibility = 'hidden';
+    if (this.account) {
+        accessTokenRequest.account = this.account;
+        await msalInstance.acquireTokenSilent(accessTokenRequest)
+            .then((accessToken) => {
+                return processAccessToken(accessToken);
+            })
+            .then((userProperties) => {
+                if (userProperties.userId !== null || userProperties.userEmail !== undefined) {
+                    // initConnexLogin(userProperties);
+                }
+            })
+            .catch((error) => {
+                sessionStorage.clear();
+                if (error) {
+                    msalInstance.loginRedirect({
+                        scopes: scopes,
+                    });
+                }
+            })
 
-        this.account = msalInstance.getAllAccounts()[0] || null;
-
-        if (this.account) {
-            accessTokenRequest.account = this.account;
-            await msalInstance.acquireTokenSilent(accessTokenRequest)
-                .then((accessToken) => {
-                    return processAccessToken(accessToken);
-                })
-                .then((userProperties) => {
-                    if (userProperties.userId !== null || userProperties.userEmail !== undefined) {
-                        // initConnexLogin(userProperties);
-                    }
-                })
-                .catch((error) => {
-                    sessionStorage.clear();
-                    if (error) {
-                        msalInstance.loginRedirect({
-                            scopes: scopes,
-                        });
-                    }
-                })
-
-        } else {
-            await msalInstance.loginRedirect({
-                scopes: scopes,
-            });
-        }
-    }
-
-    else {
-        loginSection.style.visibility = 'hidden';
-        pageLoadingSection.style.visibility = 'visible';
-        window.location.href = window.location.origin + '/#/'
+    } else {
+        await msalInstance.loginRedirect({
+            scopes: scopes,
+        });
     }
 
 }
@@ -118,9 +104,7 @@ function getMetatag(tagName) {
             const tagStatus = metas[i].content;
 
             if (metas[i].getAttribute('name') === tagName) {
-                if (tagName === 'use-msal-auth') {
-                    sessionStorage.setItem('use-msal-auth', tagStatus);
-                }
+
                 return metas[i].getAttribute('content');
             }
         }
@@ -144,7 +128,7 @@ async function initConnexLogin(prop) {
         .then(userPrincipalName => {
             if (userPrincipalName['upn'] !== undefined) {
                 sessionStorage.setItem('upn', userPrincipalName.upn);
-                window.location.href = `window.location.origin\\home.html`
+                window.location.href = `${window.location.origin}/home.html`
             }
             else {
                 throw error;
@@ -153,6 +137,5 @@ async function initConnexLogin(prop) {
         .catch(error => {
             console.log(error);
             sessionStorage.clear();
-            setLoginDefault();
         })
 }
