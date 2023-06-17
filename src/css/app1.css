@@ -1,0 +1,53 @@
+.home {
+    background-color: white;
+}
+
+.navbar-fixed {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+}
+
+.btn,
+nav {
+    background-color: #2196F0;
+}
+
+.accent {
+    background-color: #64B5F6 !important;
+}
+
+.login {
+    background-color: #292929;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.centered-box {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: #A3C65F;
+}
+
+.sign-btn {
+    background-color: #2196F0;
+}
+
+.welcome-text {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-text {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}

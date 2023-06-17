@@ -1,16 +1,16 @@
-let wait;
+function navigateToMarketPoint(){
+  const userHint = sessionStorage.getItem('login-hint');
+  const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
 
+  window.location.href = `https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}&tenant=${tenant}`
 
-// HTML Elements
-const metas = document.getElementsByTagName('meta');
-const spinner = document.getElementById('spinner');
-const signInButton = document.getElementById('submit-button');
-const loginPrompt = document.getElementById('login-prompt');
-const loginSalutation = document.getElementById('login-salutation');
-const loginSection = document.getElementById('login-panel');
-const pageLoadingSection = document.getElementById('loading-panel');
+}
 
-signInButton.style.visibility = 'hidden';
+async function getUrlParameters(){
+  const params = (new URL(window.location.href)).searchParams;
+  return params;
+}
+
 
 const language = window.navigator.languages[0];
 
@@ -28,7 +28,7 @@ const accessTokenRequest = {
 const msalConfig = {
     auth: {
         clientId: clientId(),
-        redirectUri: window.location.origin + '/blankapp1.html',
+        redirectUri: window.location.origin + '/login.html',
         authority: 'https://login.microsoftonline.com/3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4/',
         navigateToLoginRequestUrl: false
     },
@@ -52,7 +52,6 @@ const signIn = async function () {
     pageLoadingSection.style.visibility = 'visible';
 
     sessionStorage.setItem('clientId', clientId());
-    sessionStorage.setItem('use-msal-signout', canUseMsalSignout());
     localStorage.clear();
 
     if (canUseMsalAuth()) {
@@ -60,7 +59,6 @@ const signIn = async function () {
         loginSection.stylevisibility = 'visible';
         pageLoadingSection.style.visibility = 'hidden';
 
-        setLoginInProgress();
         this.account = msalInstance.getAllAccounts()[0] || null;
 
         if (this.account) {
@@ -71,7 +69,7 @@ const signIn = async function () {
                 })
                 .then((userProperties) => {
                     if (userProperties.userId !== null || userProperties.userEmail !== undefined) {
-                        initConnexLogin(userProperties);
+                        // initConnexLogin(userProperties);
                     }
                 })
                 .catch((error) => {
@@ -101,7 +99,6 @@ const signIn = async function () {
 msalInstance.handleRedirectPromise()
     .then((accessToken) => {
         if (accessToken !== null) {
-            setLoginInProgress();
             return processAccessToken(accessToken);
         }
     })
@@ -143,12 +140,11 @@ function processAccessToken(accessToken) {
 }
 
 async function initConnexLogin(prop) {
-    setLoginInProgress();
     await getUserPrincipalName(prop)
         .then(userPrincipalName => {
             if (userPrincipalName['upn'] !== undefined) {
                 sessionStorage.setItem('upn', userPrincipalName.upn);
-                window.location.href = 'https://vs-pioneer.visualstudio.com/project0/_boards/board/t/DevOps/Backlog%20items?System.AssignedTo=cleef.messan%40corteva.com';
+                window.location.href = `window.location.origin\\home.html`
             }
             else {
                 throw error;
@@ -160,52 +156,3 @@ async function initConnexLogin(prop) {
             setLoginDefault();
         })
 }
-
-// async function getUserPrincipalName({ userId, userEmail }) {
-//     setLoginInProgress();
-//     const requestInit = {
-//         method: 'GET',
-//         cache: 'no-cache',
-//         headers: {
-//             'upn': userEmail,
-//             'Authorization': sessionStorage.getItem('Authorization'),
-//             'Referrer-Policy': 'no-referrer'
-//         },
-//     }
-
-//     const request = await fetch(`/api/msal/${userId}/upn`, requestInit)
-//     const userUPN = await request.json();
-//     return userUPN;
-// }
-
-
-function setLoginInProgress() {
-    spinner.removeAttribute('hidden');
-    signInButton.setAttribute('disabled', true);
-    signInButton.value = language.slice(0, 2) === 'en' ? 'Authorizing' : 'Autorisation';
-    localStorage.removeItem("auth-in-progress");
-    getUrlParameters();
-
-}
-
-
-function setLoginDefault() {
-    if (JSON.parse(localStorage.getItem("auth-in-progress")) == null || JSON.parse(localStorage.getItem("auth-in-progress")) === false) {
-        signInButton.disabled = false;
-        spinner.setAttribute('hidden', true);
-        loginSalutation.innerHTML = language.slice(0, 2) === 'en' ? 'Welcome. ' : 'Bienvenue. ';
-        loginPrompt.innerHTML = language.slice(0, 2) === 'en' ? 'Please login' : 'Veuillez ouvrir une session';
-        signInButton.value = language.slice(0, 2) === 'en' ? 'Sign In' : 'Connexion';
-        signInButton.style.display = 'inline';
-        signInButton.style.visibility = 'visible';
-        clearTimeout(wait);
-        getUrlParameters();
-    }
-}
-
-async function getUrlParameters() {
-    const params = (new URL(window.location.href)).searchParams;
-    return params;
-}
-
-wait = setTimeout(setLoginDefault(), 1500);
