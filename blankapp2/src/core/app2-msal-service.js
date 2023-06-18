@@ -139,8 +139,10 @@ function processAccessToken(accessToken) {
     sessionStorage.setItem('login-hint', accessToken['account']['idTokenClaims']['login_hint']);
     sessionStorage.setItem('home-account-id', accessToken['account']['homeAccountId']);
 
-    const userProps = { 'userId': accessToken['account']['idTokenClaims']['oid'], 'userEmail': accessToken['account']['idTokenClaims']['preferred_username'] };
-    return userProps;
+    // const userProps = { 'userId': accessToken['account']['idTokenClaims']['oid'], 'userEmail': accessToken['account']['idTokenClaims']['preferred_username'] };
+
+    // return userProps;
+    window.location.href = window.location.origin + '/home/';
 }
 
 async function initConnexLogin(prop) {
@@ -181,7 +183,7 @@ async function getUserPrincipalName({ userId, userEmail }) {
 
 async function getUrlParameters(){
     const params = (new URL(window.location.href)).searchParams;
-    return params; 
+    return params;
 }
 
 wait = setTimeout(setLoginDefault(), 1500);
