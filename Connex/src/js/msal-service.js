@@ -4,8 +4,7 @@ function navigateToMarketPoint() {
     const userHint = sessionStorage.getItem('login-hint');
     const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
 
-    window.location.href = `https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}&tenant=${tenant}`
-
+    window.open(`https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}&tenant=${tenant}`, '_blank');
 }
 
 async function getUrlParameters() {
@@ -47,8 +46,6 @@ const msalConfig = {
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
 const signIn = async function () {
-
-
     sessionStorage.setItem('clientId', clientId());
     localStorage.clear();
 
@@ -90,21 +87,17 @@ msalInstance.handleRedirectPromise()
     })
     .then((prop) => {
         if (prop.userId !== null || prop.userEmail !== undefined) {
-            initConnexLogin(prop);
+            // initConnexLogin(prop);
         }
     })
     .catch((error) => {
     })
 
 
-
 function getMetatag(tagName) {
     if (metas.length > 0) {
         for (let i = 0; i < metas.length; i++) {
-            const tagStatus = metas[i].content;
-
             if (metas[i].getAttribute('name') === tagName) {
-
                 return metas[i].getAttribute('content');
             }
         }
@@ -121,21 +114,4 @@ function processAccessToken(accessToken) {
 
     const userProps = { 'userId': accessToken['account']['idTokenClaims']['oid'], 'userEmail': accessToken['account']['idTokenClaims']['preferred_username'] };
     return userProps;
-}
-
-async function initConnexLogin(prop) {
-    await getUserPrincipalName(prop)
-        .then(userPrincipalName => {
-            if (userPrincipalName['upn'] !== undefined) {
-                sessionStorage.setItem('upn', userPrincipalName.upn);
-                window.location.href = `${window.location.origin}/home.html`
-            }
-            else {
-                throw error;
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            sessionStorage.clear();
-        })
 }
