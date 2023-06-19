@@ -75,6 +75,8 @@ function processAccessToken(accessToken) {
     sessionStorage.setItem('Authorization', 'Bearer ' + accessToken['accessToken']);
     sessionStorage.setItem('login-hint', accessToken['account']['idTokenClaims']['login_hint']);
     sessionStorage.setItem('home-account-id', accessToken['account']['homeAccountId']);
+    sessionStorage.setItem('upn', accessToken['account']['username']);
+
 
     // const userProps = { 'userId': accessToken['account']['idTokenClaims']['oid'], 'userEmail': accessToken['account']['idTokenClaims']['preferred_username'] };
     // return userProps;
