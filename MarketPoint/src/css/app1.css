@@ -8,6 +8,9 @@ body {
     background-color: aliceblue;
 }
 
+.login-msal {
+    background-color: rgb(41, 140, 226) !important;
+}
 .centered-content {
     display: flex;
     flex-direction: column;
