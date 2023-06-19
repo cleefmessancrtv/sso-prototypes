@@ -15,7 +15,7 @@ const accessTokenRequest = {
 
 const msalConfig = {
     auth: {
-        clientId: '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4',
+        clientId: 'cad0ee25-4800-4616-9fe5-afc332a4faf6',
         redirectUri: `${window.location.origin}/msal.html`,
         authority: 'https://login.microsoftonline.com/3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4/',
         navigateToLoginRequestUrl: false
