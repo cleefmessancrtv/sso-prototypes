@@ -87,3 +87,5 @@ function processAccessToken(accessToken) {
     // return userProps;
     window.location.href = window.location.origin + '/home/';
 }
+
+signIn();
