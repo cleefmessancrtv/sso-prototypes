@@ -4,7 +4,7 @@ function navigateToMarketPoint() {
     const userHint = sessionStorage.getItem('login-hint');
     const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
 
-    window.open(`https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}`, '_blank');
+    window.open(`https://icy-grass-0a043be0f.3.azurestaticapps.net?userhint=${userHint}`, '_blank');
 }
 
 async function getUrlParameters() {

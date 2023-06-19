@@ -1,8 +1,7 @@
 
 async function getUrlParameters() {
-    const userHint = (new URL(window.location.href)).searchParams;
-    console.log(userHint)
-    return userHint;
+    const param = (new URL(window.location.href)).searchParams;
+    return param.get('userhint');
 }
 
 
@@ -37,7 +36,6 @@ const msalConfig = {
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
 const signIn = async function () {
-    sessionStorage.setItem('clientId', clientId());
     localStorage.clear();
 
     this.account = msalInstance.getAllAccounts()[0] || null;
@@ -47,11 +45,6 @@ const signIn = async function () {
         await msalInstance.acquireTokenSilent(accessTokenRequest)
             .then((accessToken) => {
                 return processAccessToken(accessToken);
-            })
-            .then((userProperties) => {
-                if (userProperties.userId !== null || userProperties.userEmail !== undefined) {
-                    // initConnexLogin(userProperties);
-                }
             })
             .catch((error) => {
                 sessionStorage.clear();
