@@ -59,6 +59,7 @@ const signIn = async function () {
 
 msalInstance.handleRedirectPromise()
     .then((accessToken) => {
+
         if (accessToken !== null) {
             processAccessToken(accessToken);
         }
@@ -70,6 +71,7 @@ msalInstance.handleRedirectPromise()
 
 
 function processAccessToken(accessToken) {
+    console.log("Processing Token")
     localStorage.setItem("auth-in-progress", true);
 
     sessionStorage.setItem('Authorization', 'Bearer ' + accessToken['accessToken']);
@@ -80,7 +82,7 @@ function processAccessToken(accessToken) {
 
     // const userProps = { 'userId': accessToken['account']['idTokenClaims']['oid'], 'userEmail': accessToken['account']['idTokenClaims']['preferred_username'] };
     // return userProps;
-    window.location.href = window.location.origin + '/home/';
+    window.location.href = window.location.origin + '/home';
 }
 
 signIn();

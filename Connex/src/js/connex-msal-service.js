@@ -1,7 +1,7 @@
 const metas = document.getElementsByTagName('meta');
 
 function navigateToMarketPoint() {
-    const upn = sessionStorage.getItem('login-hint');
+    const upn = sessionStorage.getItem('upn');
     const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
 
     window.open(`https://icy-grass-0a043be0f.3.azurestaticapps.net?userhint=${upn}`, '_blank');
