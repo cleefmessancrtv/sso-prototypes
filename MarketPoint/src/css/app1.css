@@ -1,53 +1,36 @@
-.home {
-    background-color: white;
-}
 
-.navbar-fixed {
-    position: fixed;
-    z-index: 1000;
-    width: 100%;
-}
-
-.btn,
-nav {
-    background-color: #2196F0;
-}
-
-.accent {
-    background-color: #64B5F6 !important;
-}
-
-.login {
-    background-color: #292929;
+body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    background-color: aliceblue;
 }
 
-.centered-box {
-    width: 300px;
-    height: 200px;
+.centered-content {
     display: flex;
+    flex-direction: column;
+        align-items: center;
     justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    background-color: #A3C65F;
 }
 
-.sign-btn {
-    background-color: #2196F0;
-}
-
-.welcome-text {
-    color: red;
-    text-align: center;
+/* Override default accent color for button */
+.btn {
+    color: #D9B257;
+    background-color: white;
+    font-weight: bold;
     margin-bottom: 20px;
 }
 
-.login-text {
+.loggingin {
+    font-weight: 900;
+    padding: 20px;
+}
+
+.home {
+    background-color: #D9B257;
     color: white;
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: large;
+    font-weight: bold;
 }

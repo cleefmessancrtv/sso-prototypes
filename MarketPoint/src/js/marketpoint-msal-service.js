@@ -1,32 +1,23 @@
-const metas = document.getElementsByTagName('meta');
-
-function navigateToMarketPoint() {
-    const userHint = sessionStorage.getItem('login-hint');
-    const tenant = '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4';
-
-    window.open(`https://icy-grass-0a043be0f.3.azurestaticapps.net\\?userhint=${userHint}`, '_blank');
-}
 
 async function getUrlParameters() {
-    const params = (new URL(window.location.href)).searchParams;
-    return params;
+    const userHint = (new URL(window.location.href)).searchParams;
+    console.log(userHint)
+    return userHint;
 }
 
 
-const language = window.navigator.languages[0];
 
 // Msal
+const userHint = getUrlParameters();
 const MSAL = window.msal;
-const clientId = () => getMetatag('clientId');
-const scope = () => getMetatag('apiScope');
-const scopes = [scope()];
+const scopes = ['api://a50bf762-1619-4252-8cd5-0a261d0c631b/ApiAccess'];
 const accessTokenRequest = {
     scopes: scopes
 };
 
 const msalConfig = {
     auth: {
-        clientId: clientId(),
+        clientId: '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4',
         redirectUri: `${window.location.origin}/index.html`,
         authority: 'https://login.microsoftonline.com/3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4/',
         navigateToLoginRequestUrl: false
@@ -72,8 +63,10 @@ const signIn = async function () {
             })
 
     } else {
-        await msalInstance.loginRedirect({
+        await msalInstance.ssoSilent({
             scopes: scopes,
+            loginHint: userHint,
+            domainHint: '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4'
         });
     }
 
@@ -82,28 +75,13 @@ const signIn = async function () {
 msalInstance.handleRedirectPromise()
     .then((accessToken) => {
         if (accessToken !== null) {
-            return processAccessToken(accessToken);
+            processAccessToken(accessToken);
         }
     })
-    .then((prop) => {
-        if (prop.userId !== null || prop.userEmail !== undefined) {
-            // initConnexLogin(prop);
-        }
-    })
+
     .catch((error) => {
     })
 
-
-function getMetatag(tagName) {
-    if (metas.length > 0) {
-        for (let i = 0; i < metas.length; i++) {
-            if (metas[i].getAttribute('name') === tagName) {
-                return metas[i].getAttribute('content');
-            }
-        }
-    }
-    return '';
-};
 
 function processAccessToken(accessToken) {
     localStorage.setItem("auth-in-progress", true);
