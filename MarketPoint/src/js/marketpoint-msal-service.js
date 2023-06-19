@@ -45,7 +45,7 @@ const signIn = async function () {
             loginHint: userHint
         });
     } catch (error) {
-
+        console.log(error);
     }
 
 
