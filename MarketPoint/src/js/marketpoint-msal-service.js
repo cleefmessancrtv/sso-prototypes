@@ -1,5 +1,5 @@
 
-async function getUrlParameters() {
+function getUrlParameters() {
     const param = (new URL(window.location.href)).searchParams;
     return param.get('userhint');
 }
