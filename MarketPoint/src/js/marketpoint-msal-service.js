@@ -40,7 +40,7 @@ const signIn = async function () {
 
 
     try {
-        await msalInstance.acquireTokenSilent({
+        await msalInstance.ssosilent({
             scopes: scopes,
             loginHint: userHint
         });
