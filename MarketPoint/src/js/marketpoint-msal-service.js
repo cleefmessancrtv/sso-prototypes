@@ -5,7 +5,6 @@ function getUrlParameters() {
 }
 
 
-
 // Msal
 const userHint = getUrlParameters();
 const MSAL = window.msal;
@@ -46,6 +45,12 @@ const signIn = async function () {
         });
     } catch (error) {
         console.log(error);
+        console.log("Trying Logging redirect")
+
+        await msalInstance.loginRedirect({
+            scopes: scopes,
+            loginHint: userHint
+        });
     }
 
 
@@ -60,6 +65,7 @@ msalInstance.handleRedirectPromise()
     })
 
     .catch((error) => {
+        console.log(error);
     })
 
 
