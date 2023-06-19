@@ -28,7 +28,7 @@ const msalConfig = {
     },
     system: {
         tokenRenewalOffsetSeconds: 60,
-        loadFrameTimeout: 0,
+        loadFrameTimeout: 9000,
         asyncPopups: false
     }
 };
@@ -38,30 +38,17 @@ const msalInstance = new msal.PublicClientApplication(msalConfig);
 const signIn = async function () {
     localStorage.clear();
 
-    this.account = msalInstance.getAllAccounts()[0] || null;
 
-    if (this.account) {
-        accessTokenRequest.account = this.account;
-        await msalInstance.acquireTokenSilent(accessTokenRequest)
-            .then((accessToken) => {
-                return processAccessToken(accessToken);
-            })
-            .catch((error) => {
-                sessionStorage.clear();
-                if (error) {
-                    msalInstance.loginRedirect({
-                        scopes: scopes,
-                    });
-                }
-            })
-
-    } else {
+    try {
         await msalInstance.ssoSilent({
             scopes: scopes,
-            loginHint: userHint,
-            domainHint: '3e20ecb2-9cb0-4df1-ad7b-914e31dcdda4'
+            loginHint: userHint
         });
+    } catch (error) {
+
     }
+
+
 
 }
 
