@@ -59,7 +59,7 @@ const signIn = async function () {
 
 msalInstance.handleRedirectPromise()
     .then((accessToken) => {
-
+        debugger
         if (accessToken !== null) {
             processAccessToken(accessToken);
         }
