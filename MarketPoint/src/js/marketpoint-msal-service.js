@@ -28,7 +28,7 @@ const msalConfig = {
     },
     system: {
         tokenRenewalOffsetSeconds: 60,
-        loadFrameTimeout: 9000,
+        loadFrameTimeout: 90000,
         asyncPopups: false
     }
 };
@@ -40,7 +40,7 @@ const signIn = async function () {
 
 
     try {
-        await msalInstance.ssoSilent({
+        await msalInstance.acquireTokenSilent({
             scopes: scopes,
             loginHint: userHint
         });
